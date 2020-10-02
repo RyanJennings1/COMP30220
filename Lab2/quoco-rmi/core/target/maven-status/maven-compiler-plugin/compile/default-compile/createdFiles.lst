@@ -1,0 +1,6 @@
+core/AbstractQuotationService.class
+core/Quotation.class
+core/Constants.class
+core/BrokerService.class
+core/ClientInfo.class
+core/QuotationService.class
