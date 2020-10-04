@@ -1,12 +1,14 @@
 package core;
 
+import java.io.Serializable;
+
 /**
  * Interface to define the state to be stored in ClientInfo objects
  * 
  * @author Rem
  *
  */
-public class ClientInfo {
+public class ClientInfo implements Serializable {
 	public static final char MALE = 'M';
 	public static final char FEMALE = 'F';
 	
