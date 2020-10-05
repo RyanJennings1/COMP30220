@@ -60,34 +60,26 @@ public class BrokerUnitTest {
     registry.bind(Constants.AULD_FELLAS_SERVICE, afqService);
     registry.bind(Constants.DODGY_DRIVERS_SERVICE, ddqService);
     registry.bind(Constants.GIRL_POWER_SERVICE, gpqService);
-    for (String name: registry.list()) {
-      System.out.println("Name: " + name);
-    }
 
     ClientInfo client1 = new ClientInfo("Old Geeza", ClientInfo.MALE, 65, 0, 2, "ABC123/4");
-    //LocalBrokerService service = new LocalBrokerService();
+
     BrokerService service = (BrokerService)
       registry.lookup(Constants.BROKER_SERVICE);
     List<Quotation> quotes = service.getQuotations(client1);
-    //assertTrue(quotes.size() > 0);
-    //assertTrue(!quotes.isEmpty());
+    assertTrue(quotes.size() > 0);
+    assertTrue(!quotes.isEmpty());
     assertNotNull(quotes);
-    System.out.println("1-----------------------");
-    for (Quotation quo: quotes) {
-      System.out.println(quo.company);
-    }
   }
 
   @Test
   public void getQuotationReturnsEmptyListTest() throws Exception {
+    registry.unbind(Constants.AULD_FELLAS_SERVICE);
+    registry.unbind(Constants.DODGY_DRIVERS_SERVICE);
+    registry.unbind(Constants.GIRL_POWER_SERVICE);
+
     ClientInfo client1 = new ClientInfo("Old Geeza", ClientInfo.MALE, 65, 0, 2, "ABC123/4");
     LocalBrokerService service = new LocalBrokerService();
     List<Quotation> quotes = service.getQuotations(client1);
-    System.out.println("2-----------------------");
-    for (Quotation quo: quotes) {
-      System.out.println("2>>>");
-      System.out.println(quo.company);
-    }
     assertTrue(quotes.isEmpty());
   }
 }

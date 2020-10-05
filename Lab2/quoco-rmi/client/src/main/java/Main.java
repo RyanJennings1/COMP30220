@@ -38,6 +38,7 @@ public class Main {
         registry = LocateRegistry.getRegistry(host, 1099);
       }
 
+      // Create the services and bind them to the registry.
       QuotationService afqService = new AFQService();
       QuotationService ddqService = new DDQService();
       QuotationService gpqService = new GPQService();
@@ -57,14 +58,6 @@ public class Main {
       registry.bind(Constants.DODGY_DRIVERS_SERVICE, ddqService);
       registry.bind(Constants.GIRL_POWER_SERVICE, gpqService);
       registry.bind(Constants.BROKER_SERVICE, lbService);
-
-      // Create the services and bind them to the registry.
-      /*
-      registry.bind(Constants.GIRL_POWER_SERVICE, new GPQService());
-      registry.bind(Constants.AULD_FELLAS_SERVICE, new AFQService());
-      registry.bind(Constants.DODGY_DRIVERS_SERVICE, new DDQService());
-      registry.bind(Constants.BROKER_SERVICE, new LocalBrokerService());
-      */
 
       BrokerService brokerService = (BrokerService)registry.lookup(Constants.BROKER_SERVICE);
  

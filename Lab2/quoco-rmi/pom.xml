@@ -12,11 +12,11 @@
   </properties>    
 
   <modules>
+    <module>client</module>
     <module>core</module>
     <module>auldfellas</module>
     <module>dodgydrivers</module>
     <module>girlpower</module>
     <module>broker</module>
-    <module>client</module>
   </modules>
 </project>
