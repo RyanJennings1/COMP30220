@@ -1,9 +1,8 @@
-import java.rmi.registry.*;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 import girlpower.GPQService;
-import core.ClientInfo;
-import core.Quotation;
 import core.QuotationService;
 import core.Constants;
 
@@ -20,12 +19,13 @@ public class Server {
       } else {
        registry = LocateRegistry.getRegistry(host, 1099);
       }
+
       // Create the Remote Object
       QuotationService quotationService = (QuotationService)
       UnicastRemoteObject.exportObject(gpqService, 0);
+
       // Register the object with the RMI Registry
       registry.bind(Constants.GIRL_POWER_SERVICE, quotationService);
-
       System.out.println("STOPPING SERVER SHUTDOWN");
       while (true) {Thread.sleep(1000); }
     } catch (Exception e) {

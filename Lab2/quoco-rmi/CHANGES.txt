@@ -3,3 +3,52 @@ Name: Ryan Jennings
 ID: 19205824
 
 =============== Changes ===============
+- Core:
+  - Make BrokerService extend java.rmi.Remote
+    Throw java.rmi.RemoteException
+  - Make QuotationService extend java.rmi.Remote
+    Throw java.rmi.RemoteException
+  - Make Quotation implement serializable
+  - Make ClientInfo implement serializable
+  - Added empty Main.java file that is the main.class
+    for client/pom.xml to be executed without breaking
+    while looking for a main class
+- Auldfellas:
+  - Update to make use of Java RMI rather than
+    the ServiceRegistry
+  - Update test to use Java RMI
+    Add test to check generate quotes
+    Assert the quote is an instance of Quotation class
+    Assert that the fields of the quote are not null
+- Dodgydrivers:
+  - Update to make use of Java RMI rather than
+    the ServiceRegistry
+  - Update test to use Java RMI
+    Add test to check generate quotes
+    Assert the quote is an instance of Quotation class
+    Assert that the fields of the quote are not null
+- Girlpower:
+  - Update to make use of Java RMI rather than
+    the ServiceRegistry
+  - Update test to use Java RMI
+    Add test to check generate quotes
+    Assert the quote is an instance of Quotation class
+    Assert that the fields of the quote are not null
+- Broker:
+  - Update to make use of Java RMI rather than
+    the ServiceRegistry
+  - Add test that registers services and checks quotes
+  - Add test that unbinds registered services and
+    then checks that an empty list is returned
+- Client:
+  - Update to make use of Java RMI rather than
+    the ServiceRegistry
+- Added docker-compose.yml in project root dir
+- Added Dockerfiles for:
+  - client
+  - broker
+  - auldfellas
+  - dodgydrivers
+  - girlpower
+- Added build.sh
+- Added build.bat

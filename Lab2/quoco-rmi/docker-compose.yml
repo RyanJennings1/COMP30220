@@ -1,0 +1,25 @@
+version: '3'
+services:
+  broker:
+    image: "broker:latest"
+    ports:
+      - "1099:1099"
+  auldfellas:
+    image: "auldfellas:latest"
+    ports:
+      - "1099:1099"
+  dodgydrivers:
+    image: "dodgydrivers:latest"
+    ports:
+      - "1099:1099"
+  girlpower:
+    image: "girlpower:latest"
+    ports:
+      - "1099:1099"
+  client:
+    image: "client:latest"
+    depends_on:
+      - broker
+      - auldfellas
+      - dodgydrivers
+      - girlpower
