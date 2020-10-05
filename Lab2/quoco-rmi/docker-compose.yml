@@ -18,6 +18,8 @@ services:
       - "1099:1099"
   client:
     image: "client:latest"
+    ports:
+      - "1099:1099"
     depends_on:
       - broker
       - auldfellas
