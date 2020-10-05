@@ -6,6 +6,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <main.class>Constants</main.class>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>    
@@ -17,7 +18,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <mainClass>core</mainClass>
+                  <mainClass>${main.class}</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -30,7 +31,7 @@
                     <configuration>
                         <archive>
                         <manifest>
-                            <mainClass>core</mainClass>
+                          <mainClass>${main.class}</mainClass>
                         </manifest>
                         </archive>
                         <descriptorRefs>

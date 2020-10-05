@@ -60,11 +60,6 @@ public class BrokerUnitTest {
     registry.bind(Constants.AULD_FELLAS_SERVICE, afqService);
     registry.bind(Constants.DODGY_DRIVERS_SERVICE, ddqService);
     registry.bind(Constants.GIRL_POWER_SERVICE, gpqService);
-    /*
-    registry.bind(Constants.AULD_FELLAS_SERVICE, new AFQService());
-    registry.bind(Constants.DODGY_DRIVERS_SERVICE, new DDQService());
-    registry.bind(Constants.GIRL_POWER_SERVICE, new GPQService());
-    */
     for (String name: registry.list()) {
       System.out.println("Name: " + name);
     }
@@ -89,6 +84,10 @@ public class BrokerUnitTest {
     LocalBrokerService service = new LocalBrokerService();
     List<Quotation> quotes = service.getQuotations(client1);
     System.out.println("2-----------------------");
+    for (Quotation quo: quotes) {
+      System.out.println("2>>>");
+      System.out.println(quo.company);
+    }
     assertTrue(quotes.isEmpty());
   }
 }
