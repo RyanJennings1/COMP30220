@@ -52,3 +52,5 @@ ID: 19205824
   - girlpower
 - Added build.sh
 - Added build.bat
+- Add Dockerfiles for auldfellas, dodgydrivers and girlpower
+- Add docker-compose.yml file to build and run images
