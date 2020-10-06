@@ -11,5 +11,5 @@ import java.rmi.RemoteException;
  *
  */
 public interface BrokerService extends java.rmi.Remote {
-	public List<Quotation> getQuotations(ClientInfo info) throws java.rmi.RemoteException;
+  public List<Quotation> getQuotations(ClientInfo info) throws java.rmi.RemoteException;
 }

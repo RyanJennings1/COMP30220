@@ -10,5 +10,5 @@ import java.rmi.RemoteException;
  *
  */
 public interface QuotationService extends java.rmi.Remote {
-	public Quotation generateQuotation(ClientInfo info) throws java.rmi.RemoteException;
+  public Quotation generateQuotation(ClientInfo info) throws java.rmi.RemoteException;
 }

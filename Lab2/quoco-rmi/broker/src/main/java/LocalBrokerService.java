@@ -18,11 +18,11 @@ import core.QuotationService;
  *
  */
 public class LocalBrokerService implements BrokerService {
-	public List<Quotation> getQuotations(ClientInfo info) {
-		List<Quotation> quotations = new LinkedList<Quotation>();
+  public List<Quotation> getQuotations(ClientInfo info) {
+    List<Quotation> quotations = new LinkedList<Quotation>();
     try {
       Registry registry = LocateRegistry.getRegistry();
-      
+
       for (String name : registry.list()) {
         if (name.startsWith("qs-")) {
           QuotationService service = (QuotationService)registry.lookup(name);
@@ -33,6 +33,6 @@ public class LocalBrokerService implements BrokerService {
     } catch (Exception e) {
       System.out.println("Trouble: " + e);
     }
-		return quotations;
-	}
+    return quotations;
+  }
 }
