@@ -1,0 +1,6 @@
+=============== Lab3 WS ===============
+Name: Ryan Jennings
+ID: 19205824
+
+=============== Changes ===============
+- Updated groupId and artifactId for pom.xml
