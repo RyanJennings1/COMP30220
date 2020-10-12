@@ -14,10 +14,10 @@
   <modules>
     <module>core</module>
     <module>auldfellas</module>
-    <!--
     <module>client</module>
     <module>dodgydrivers</module>
     <module>girlpower</module>
+    <!--
     <module>broker</module>
     -->
   </modules>
