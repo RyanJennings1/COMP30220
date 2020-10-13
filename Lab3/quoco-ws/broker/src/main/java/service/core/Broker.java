@@ -7,13 +7,20 @@ import java.util.List;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpContext;
 
-import java.net.InetSocketAddress;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.net.URL;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.Service;
@@ -29,18 +36,23 @@ import service.core.Quotation;
  */
 @WebService
 @SOAPBinding(style=SOAPBinding.Style.DOCUMENT, use=SOAPBinding.Use.LITERAL)
-public class Broker {
+public class Broker implements ServiceListener {
   private static LinkedList<String> urls = new LinkedList<String>();
 
   public static void main(String[] args) {
     try {
-      Endpoint endpoint = Endpoint.create(new Broker());
-      HttpServer server = HttpServer.create(new InetSocketAddress(9000), 5);
-      server.setExecutor(Executors.newFixedThreadPool(5));
-      HttpContext context = server.createContext("/broker");
-      endpoint.publish(context);
-      server.start();
-    } catch (Exception e) {
+      Endpoint.publish("http://0.0.0.0:9000/broker", new Broker());
+      // Create a JmDNS instance
+      JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+      // Add a service listener
+      jmdns.addServiceListener("_http._tcp.local.", new Broker());
+      // Wait a bit
+      Thread.sleep(30000);
+    } catch (UnknownHostException e) {
+      System.out.println(e.getMessage());
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
@@ -61,4 +73,31 @@ public class Broker {
 
 		return quotations;
 	}
+
+  @Override
+  public void serviceAdded(ServiceEvent event) {
+    System.out.println("Service added: " + event.getInfo());
+  }
+
+  @Override
+  public void serviceRemoved(ServiceEvent event) {
+    System.out.println("Service removed: " + event.getInfo());
+  }
+
+  @Override
+  public void serviceResolved(ServiceEvent event) {
+    System.out.println("Service resolved: " + event.getInfo());
+    String path = event.getInfo().getPropertyString("path");
+    if (path != null) {
+      try {
+        System.out.println("================================");
+        System.out.println("Path: " + path);
+        System.out.println("================================");
+        urls.add(path);
+      } catch (Exception e) {
+        System.out.println("Problem with service: " + e.getMessage());
+        e.printStackTrace();
+      }
+    }
+  }
 }

@@ -5,7 +5,12 @@ import java.util.concurrent.Executors;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpContext;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
+
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -29,6 +34,7 @@ public class Quoter extends AbstractQuotationService {
   public static final String COMPANY = "Girl Power Inc.";
 
   public static void main(String[] args) {
+    /*
     try {
       Endpoint endpoint = Endpoint.create(new Quoter());
       HttpServer server = HttpServer.create(new InetSocketAddress(9002), 5);
@@ -39,6 +45,13 @@ public class Quoter extends AbstractQuotationService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    */
+    String host = "localhost";
+    if (args.length > 0) {
+      host = args[0];
+    }
+    Endpoint.publish("http://0.0.0.0:9002/quotation", new Quoter());
+    jmdnsAdvertise(host);
   }
 	
   /**
@@ -78,6 +91,29 @@ public class Quoter extends AbstractQuotationService {
     if (info.points < 3) return 15;
     if (info.points < 6) return 0;
     return -100;
+  }
+
+  private static void jmdnsAdvertise(String host) {
+    try {
+      String config = "path=http://" + host + ":9002/quotation?wsdl";
+      JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+
+      // Register a service
+      ServiceInfo serviceInfo = ServiceInfo.create("_http._tcp.local.",
+                                                   "ws-service",
+                                                   1234,
+                                                   config);
+      jmdns.registerService(serviceInfo);
+
+      // Wait a bit
+      Thread.sleep(100000);
+
+      // Unregister all services
+      jmdns.unregisterAllServices();
+    } catch (Exception e) {
+      System.out.println("Problem Advertising Service: " + e.getMessage());
+      e.printStackTrace();
+    }
   }
 
 }
