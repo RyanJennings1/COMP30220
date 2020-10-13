@@ -1,0 +1,45 @@
+version: '3'
+services:
+  broker:
+    build: broker
+    image: broker:latest
+    container_name: broker
+    ports:
+      - 9000
+    expose:
+      - 9000
+  auldfellas:
+    build: auldfellas
+    image: auldfellas:latest
+    container_name: auldfellas 
+    depends_on:
+      - broker
+    ports:
+      - 9001
+    expose:
+      - 9001
+  girlpower:
+    build: girlpower
+    image: girlpower:latest
+    container_name: girlpower 
+    depends_on:
+      - broker
+    ports:
+      - 9002
+    expose:
+      - 9002
+  dodgydrivers:
+    build: dodgydrivers
+    image: dodgydrivers:latest
+    container_name: dodgydrivers 
+    depends_on:
+      - broker
+    ports:
+      - 9003
+    expose:
+      - 9003
+
+#networks:
+#  default:
+#    external:
+#      name: network
