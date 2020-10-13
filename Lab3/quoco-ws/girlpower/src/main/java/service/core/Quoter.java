@@ -22,7 +22,7 @@ import service.core.Quotation;
  *
  */
 @WebService
-@SOAPBinding(style=SOAPBinding.Style.RPC, use=SOAPBinding.Use.LITERAL)
+@SOAPBinding(style=SOAPBinding.Style.DOCUMENT, use=SOAPBinding.Use.LITERAL)
 public class Quoter extends AbstractQuotationService {
   // All references are to be prefixed with an DD (e.g. DD001000)
   public static final String PREFIX = "GP";

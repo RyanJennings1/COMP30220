@@ -1,6 +1,9 @@
 package client;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import java.net.URL;
 
@@ -9,11 +12,7 @@ import javax.xml.ws.Service;
 
 import service.core.ClientInfo;
 import service.core.Quotation;
-import service.core.QuoterService;
-
-//import service.auldfellas.AFQService;
-//import service.dodgydrivers.DDQService;
-//import service.girlpower.GPQService;
+import service.core.BrokerService;
 
 public class Client {
 
@@ -29,6 +28,7 @@ public class Client {
    */
   public static void main(String[] args) {
     try {
+      List<String> urlLinks = new ArrayList<String>();
       String host = "localhost";
       int port = 9001;
 
@@ -38,6 +38,8 @@ public class Client {
           host = args[++i];
         } else if (args[i].equals("-p") || args[i].equals("--port")) {
           port = Integer.parseInt(args[++i]);
+        } else if (args[i].startsWith("http")) {
+          urlLinks.add(args[i]);
         } else if (args[i].equals("--help")) {
           System.out.println("Command line options:");
           System.out.println("\t[-h|--host] = Host name to use");
@@ -45,20 +47,26 @@ public class Client {
         }
       }
 
-      URL wsdlUrl = new URL("http://" + host + ":" + port + "/quotation?wsdl");
+      if (urlLinks.isEmpty()) {
+        System.out.println("===========================================");
+        System.out.println("Here");
+        System.out.println("===========================================");
+        urlLinks.add("http://" + host + ":" + String.valueOf(port) + "/quotation");
+      }
 
-      QName serviceName = new QName("http://core.service/", "QuoterService");
-
+      URL wsdlUrl = new URL("http://localhost:9000/broker?wsdl");
+      QName serviceName = new QName("http://core.service/", "BrokerService");
       Service service = Service.create(wsdlUrl, serviceName);
-
-      QName portName = new QName("http://core.service/", "QuoterPort");
-      QuoterService quotationService = service.getPort(portName, QuoterService.class);
+      QName portName = new QName("http://core.service/", "BrokerPort");
+      BrokerService brokerService = service.getPort(portName, BrokerService.class);
 
       for (ClientInfo info : clients) {
         displayProfile(info);
 
-        Quotation quotation = quotationService.generateQuotation(info);
-        displayQuotation(quotation);
+        LinkedList<Quotation> quotations = brokerService.getQuotations(info, urlLinks);
+        for (Quotation quote: quotations) {
+          displayQuotation(quote);
+        }
 
         System.out.println("\n");
       }
