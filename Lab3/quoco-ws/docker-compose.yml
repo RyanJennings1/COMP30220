@@ -38,8 +38,3 @@ services:
       - 9003
     expose:
       - 9003
-
-#networks:
-#  default:
-#    external:
-#      name: network

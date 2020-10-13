@@ -48,9 +48,6 @@ public class Client {
       }
 
       if (urlLinks.isEmpty()) {
-        System.out.println("===========================================");
-        System.out.println("Here");
-        System.out.println("===========================================");
         urlLinks.add("http://" + host + ":" + String.valueOf(port) + "/quotation");
       }
 

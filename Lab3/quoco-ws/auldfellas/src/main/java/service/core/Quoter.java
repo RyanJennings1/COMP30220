@@ -34,18 +34,6 @@ public class Quoter extends AbstractQuotationService {
 	public static final String COMPANY = "Auld Fellas Ltd.";
 
   public static void main(String[] args) {
-    /*
-    try {
-      Endpoint endpoint = Endpoint.create(new Quoter());
-      HttpServer server = HttpServer.create(new InetSocketAddress(9001), 5);
-      server.setExecutor(Executors.newFixedThreadPool(5));
-      HttpContext context = server.createContext("/quotation");
-      endpoint.publish(context);
-      server.start();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    */
     String host = "localhost";
     if (args.length > 0) {
       host = args[0];

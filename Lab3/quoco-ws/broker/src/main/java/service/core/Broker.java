@@ -90,9 +90,6 @@ public class Broker implements ServiceListener {
     String path = event.getInfo().getPropertyString("path");
     if (path != null) {
       try {
-        System.out.println("================================");
-        System.out.println("Path: " + path);
-        System.out.println("================================");
         urls.add(path);
       } catch (Exception e) {
         System.out.println("Problem with service: " + e.getMessage());

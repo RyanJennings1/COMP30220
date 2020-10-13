@@ -34,18 +34,6 @@ public class Quoter extends AbstractQuotationService {
   public static final String COMPANY = "Girl Power Inc.";
 
   public static void main(String[] args) {
-    /*
-    try {
-      Endpoint endpoint = Endpoint.create(new Quoter());
-      HttpServer server = HttpServer.create(new InetSocketAddress(9002), 5);
-      server.setExecutor(Executors.newFixedThreadPool(5));
-      HttpContext context = server.createContext("/quotation");
-      endpoint.publish(context);
-      server.start();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    */
     String host = "localhost";
     if (args.length > 0) {
       host = args[0];
@@ -63,7 +51,6 @@ public class Quoter extends AbstractQuotationService {
    * 100% penalty for > 5 penalty points
    * 5% discount per year no claims
    */
-  //@Override
   @WebMethod
   public Quotation generateQuotation(ClientInfo info) {
     // Create an initial quotation between 600 and 1000

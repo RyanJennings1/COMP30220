@@ -4,3 +4,10 @@ ID: 19205824
 
 =============== Changes ===============
 - Updated groupId and artifactId for pom.xml
+- Update maven version from 11 to 1.8
+- Deleted BrokerService, QuotationService, Constants
+- Added Quoter classes for auldfellas, girlpower and dodgydrivers
+- Set up RPC webservices for classes
+- Set up webservices for Broker and Client
+- Set up JmDNS
+- Add docker and build files for the project
