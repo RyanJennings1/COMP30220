@@ -59,28 +59,31 @@ public class Main {
     MessageProducer producer = session.createProducer(topic);
     MessageConsumer consumer = session.createConsumer(queue);
 
+    connection.start();
+
     QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clients[0]);
     Message request = session.createObjectMessage(quotationRequest);
     cache.put(quotationRequest.id, quotationRequest.info);
     producer.send(request);
 
-    Message message = consumer.receive();
-    if (message instanceof ObjectMessage) {
-      Object content = ((ObjectMessage) message).getObject();
-      if (content instanceof QuotationResponseMessage) {
-        QuotationResponseMessage response = (QuotationResponseMessage) content;
-        ClientInfo info = cache.get(response.id);
-        displayProfile(info);
-        displayQuotation(response.quotation);
-        System.out.println("\n");
+    while(true) {
+      Message message = consumer.receive();
+      if (message instanceof ObjectMessage) {
+        Object content = ((ObjectMessage) message).getObject();
+        if (content instanceof QuotationResponseMessage) {
+          QuotationResponseMessage response = (QuotationResponseMessage) content;
+          ClientInfo info = cache.get(response.id);
+          displayProfile(info);
+          displayQuotation(response.quotation);
+          System.out.println("\n");
+        }
+        message.acknowledge();
+      } else {
+        System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
       }
-      message.acknowledge();
-    } else {
-      System.out.println("Unknown message type: " +
-      message.getClass().getCanonicalName());
     }
 	}
-	
+
   /**
    * Display the client info nicely.
    * 
