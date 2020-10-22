@@ -6,14 +6,14 @@
     <packaging>jar</packaging>
 
     <properties>
-        <main.class>Server</main.class>
+        <main.class>service.Receiver</main.class>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>    
 
     <dependencies>
       <dependency>
-        <groupId>labs</groupId>
+        <groupId>lab4</groupId>
         <artifactId>core</artifactId>
         <version>0.0.1</version>
       </dependency>
@@ -21,6 +21,11 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <version>5.7.0</version>
       </dependency>
     </dependencies>
 
