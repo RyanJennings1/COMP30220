@@ -19,7 +19,7 @@ import service.core.Quotation;
 import service.message.QuotationResponseMessage;
 import service.message.QuotationRequestMessage;
 
-public class Receiver{
+public class Receiver {
   public static AFQService service = new AFQService();
   public static void main(String[] args) throws JMSException {
     String host = "localhost";

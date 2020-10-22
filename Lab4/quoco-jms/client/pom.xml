@@ -13,34 +13,19 @@
 
     <dependencies>
       <dependency>
-        <groupId>labs</groupId>
+        <groupId>lab4</groupId>
         <artifactId>core</artifactId>
-        <version>0.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>labs</groupId>
-        <artifactId>broker</artifactId>
-        <version>0.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>labs</groupId>
-        <artifactId>auldfellas</artifactId>
-        <version>0.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>labs</groupId>
-        <artifactId>dodgydrivers</artifactId>
-        <version>0.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>labs</groupId>
-        <artifactId>girlpower</artifactId>
         <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <version>5.7.0</version>
       </dependency>
     </dependencies>
 
