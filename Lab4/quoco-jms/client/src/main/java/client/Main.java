@@ -42,7 +42,7 @@ public class Main {
    * 
    * @param args
    */
-  public static void main(String[] args) throws JMSException {
+  public static void main(String[] args) {
 
     String host = "localhost";
     if (args.length > 0) {
@@ -50,46 +50,56 @@ public class Main {
     }
 
     ConnectionFactory factory = new ActiveMQConnectionFactory("failover://tcp://" + host + ":61616");
-    Connection connection = factory.createConnection();
-    connection.setClientID("client");
-    Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-    Queue queue = session.createQueue("QUOTATIONS");
-    Topic topic = session.createTopic("APPLICATIONS");
-    MessageProducer producer = session.createProducer(topic);
-    MessageConsumer consumer = session.createConsumer(queue);
+    try {
+      Connection connection = factory.createConnection();
+      connection.setClientID("client");
+      Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-    connection.start();
+      Queue queue = session.createQueue("QUOTATIONS");
+      Topic topic = session.createTopic("APPLICATIONS");
+      MessageProducer producer = session.createProducer(topic);
+      MessageConsumer consumer = session.createConsumer(queue);
 
-    QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clients[0]);
-    Message request = session.createObjectMessage(quotationRequest);
-    cache.put(quotationRequest.id, quotationRequest.info);
-    producer.send(request);
+      connection.start();
 
-    while(true) {
-      Message message = consumer.receive();
-      if (message instanceof ObjectMessage) {
-        Object content = ((ObjectMessage) message).getObject();
-        if (content instanceof QuotationResponseMessage) {
-          QuotationResponseMessage response = (QuotationResponseMessage) content;
-          ClientInfo info = cache.get(response.id);
-          displayProfile(info);
-          displayQuotation(response.quotation);
-          System.out.println("\n");
-        }
-        message.acknowledge();
-      } else {
-        System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
+      for (ClientInfo clientInfo: clients) {
+        QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clientInfo);
+        Message request = session.createObjectMessage(quotationRequest);
+        cache.put(quotationRequest.id, quotationRequest.info);
+        producer.send(request);
       }
+
+      while(true) {
+        Message message = consumer.receive();
+        if (message instanceof ObjectMessage) {
+          Object content = ((ObjectMessage) message).getObject();
+          if (content instanceof ClientApplicationMessage) {
+            ClientApplicationMessage response = (ClientApplicationMessage)content;
+            ClientInfo info = cache.get(response.clientId);
+            displayProfile(info);
+            //cache.remove(response.clientId);
+            for (Quotation quote: response.quotations) {
+              displayQuotation(quote);
+            }
+            System.out.println("\n");
+          }
+          message.acknowledge();
+        } else {
+          System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
+        }
+      }
+    } catch (JMSException e) {
+      System.out.println("Trouble: " + e);
     }
-	}
+  }
 
   /**
    * Display the client info nicely.
    * 
    * @param info
    */
-	public static void displayProfile(ClientInfo info) {
+  public static void displayProfile(ClientInfo info) {
     System.out.println("|=================================================================================================================|");
     System.out.println("|                                     |                                     |                                     |");
     System.out.println(

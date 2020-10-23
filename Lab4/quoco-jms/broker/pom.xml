@@ -1,12 +1,12 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>lab4</groupId>
-    <artifactId>auldfellas</artifactId>
+    <artifactId>broker</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <properties>
-        <main.class>service.Receiver</main.class>
+        <main.class>service.Broker</main.class>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>    
