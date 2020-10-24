@@ -31,12 +31,9 @@ public class Main {
   public static HashMap<Long, List<Quotation>> clientMap = new HashMap<Long, List<Quotation>>();
 
   /**
-   * This is the starting point for the application. Here, we must
-   * get a reference to the Broker Service and then invoke the
-   * getQuotations() method on that service.
-   * 
-   * Finally, you should print out all quotations returned
-   * by the service.
+   * Main method of client to send out requests for the
+   * broker to find and respond to before we gather those
+   * responses and print them out
    * 
    * @param args
    */
@@ -68,27 +65,26 @@ public class Main {
         producer.send(request);
       }
 
-      // ClientApplicationMessage should contain 1 quote
-      // sent here, check id and add to list of quotes
-      // after a while print them out
-      DisplayQuotationsThread dqt = new DisplayQuotationsThread();
-      Thread dThread = new Thread(dqt);
-      dThread.start();
+      /*
+       * Start separate thread that will sleep and then
+       * print out gathered quotations
+       */
+      DisplayQuotationsThread displayQuotationsThreadable = new DisplayQuotationsThread();
+      Thread displayThread = new Thread(displayQuotationsThreadable);
+      displayThread.start();
 
+      /*
+       * Check for responses for each client and add their
+       * quotations to a list that will be printed out later.
+       * This method is able to scale, handle and print out
+       * as many quotations as can be found in X amount of time.
+       */
       while(true) {
         Message message = consumer.receive();
         if (message instanceof ObjectMessage) {
           Object content = ((ObjectMessage) message).getObject();
           if (content instanceof ClientApplicationMessage) {
             ClientApplicationMessage response = (ClientApplicationMessage)content;
-            /*
-            ClientInfo info = response.clientInfo;
-            displayProfile(info);
-            for (Quotation quote: response.quotes) {
-              displayQuotation(quote);
-            }
-            System.out.println("\n");
-            */
             if (clientMap.containsKey(response.clientId)) {
               ((List<Quotation>)clientMap.get(response.clientId)).add(response.quote);
             } else {
@@ -110,13 +106,9 @@ public class Main {
   public static class DisplayQuotationsThread implements Runnable {
     public void run() {
       try {
-        Thread.sleep(5000);
-        // TODO: Create clientMap
+        Thread.sleep(2000);
         for (Long client: clientMap.keySet()) {
-          System.out.println("Client Id ===============");
-          System.out.println(client);
           displayProfile(cache.get(client));
-          // TODO: Implement clientQuotes
           for (Quotation quote: clientMap.get(client)) {
             displayQuotation(quote);
           }

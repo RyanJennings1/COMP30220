@@ -41,7 +41,6 @@ import service.message.QuotationRequestMessage;
 public class Broker {
   private static HashMap<Long, ClientInfo> cache = new HashMap<Long, ClientInfo>();
   private static Connection connection;
-  private static List<Quotation> quotes;
 
   public static void main(String[] args) {
     String host = "localhost";
@@ -51,7 +50,6 @@ public class Broker {
 
     ConnectionFactory factory = new ActiveMQConnectionFactory("failover://tcp://" + host + ":61616");
     try {
-      //Connection connection = factory.createConnection();
       connection = factory.createConnection();
       connection.setClientID("broker");
 
@@ -89,6 +87,8 @@ public class Broker {
             Object content = ((ObjectMessage)message).getObject();
             if (content instanceof QuotationRequestMessage) {
               QuotationRequestMessage request = (QuotationRequestMessage)content;
+              // Leaving in this output as it makes it clear the order of how
+              // requests and responses are handled
               System.out.printf("Request Id: %d    Request Name: %s\n", request.id, request.info.name);
               producer.send(message);
               cache.put(request.id, request.info);
@@ -120,77 +120,29 @@ public class Broker {
         connection.start();
 
         while (true) {
-          quotes = new ArrayList<Quotation>();
-          Quotation rquote = null;
+          Quotation responseQuotation = null;
+          long responseId = -1;
+
           Message message = consumer.receive();
 
-          HashMap<Long, List<Quotation>> quoteMap = new HashMap<Long, List<Quotation>>();
-
-          /*
-          Thread updateThread = new Thread(new Runnable() {
-            public void run() {
-              try {
-                if (message instanceof ObjectMessage) {
-                  Object content = ((ObjectMessage)message).getObject();
-                  if (content instanceof QuotationResponseMessage) {
-                    QuotationResponseMessage response = (QuotationResponseMessage)content;
-                    quotes.add(response.quotation);
-                    System.out.println("======================");
-                    System.out.println("response id inside thread: ");
-                    System.out.println(response.id);
-                    System.out.println("======================");
-                    //responseId = response.id;
-                    message.acknowledge();
-                  }
-                } else {
-                  System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
-                }
-              } catch (JMSException e) {
-                System.out.println("Trouble: " + e);
-              }
+          if (message instanceof ObjectMessage) {
+            Object content = ((ObjectMessage)message).getObject();
+            if (content instanceof QuotationResponseMessage) {
+              QuotationResponseMessage response = (QuotationResponseMessage)content;
+              // Leaving in this output as it makes it clear the order of how
+              // requests and responses are handled
+              System.out.printf("Response Id: %d    Response Company: %s\n", response.id, response.quotation.company);
+              responseId = response.id;
+              responseQuotation = response.quotation;
+              message.acknowledge();
             }
-          });
-          updateThread.start();
-          //*/
-
-          //* handled in new thread
-          long responseId = -1;
-          long seed = 0;
-          //while (seed != 3) {
-            if (message instanceof ObjectMessage) {
-              Object content = ((ObjectMessage)message).getObject();
-              if (content instanceof QuotationResponseMessage) {
-                QuotationResponseMessage response = (QuotationResponseMessage)content;
-                System.out.printf("Response Id: %d    Response Company: %s\n", response.id, response.quotation.company);
-                //
-                //if (quoteMap.containsKey(response.id))
-                //
-                if ((responseId == -1) || (responseId == response.id)) {
-                  quotes.add(response.quotation);
-                  responseId = response.id;
-                  rquote = response.quotation;
-                  message.acknowledge();
-                  //seed++;
-                } else {
-                  //responseToClient.send(message);
-                }
-              }
-            } else {
-              System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
-            }
-          //}
-          // end of new thread */
-          /*
-          try {
-            Thread.sleep(5000);
-          } catch (InterruptedException e) {
-            System.out.println("Trouble : " + e);
+          } else {
+            System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
           }
-          */
-          //System.out.println("Quotes size: ");
-          //System.out.println(quotes.size());
-          //Message bundle = session.createObjectMessage(new ClientApplicationMessage(responseId, cache.get(responseId), quotes));
-          Message bundle = session.createObjectMessage(new ClientApplicationMessage(responseId, cache.get(responseId), rquote));
+
+          Message bundle = session.createObjectMessage(
+            new ClientApplicationMessage(responseId, cache.get(responseId), responseQuotation)
+          );
           producer.send(bundle);
         }
       } catch (JMSException e) {
