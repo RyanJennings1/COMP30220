@@ -2,6 +2,8 @@ package client;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -16,14 +18,9 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-//import service.auldfellas.AFQService;
-//import service.broker.LocalBrokerService;
-//import service.core.BrokerService;
+import service.core.ClientApplicationMessage;
 import service.core.ClientInfo;
 import service.core.Quotation;
-//import service.core.Constants;
-//import service.dodgydrivers.DDQService;
-//import service.girlpower.GPQService;
 
 import service.message.QuotationResponseMessage;
 import service.message.QuotationRequestMessage;
@@ -31,6 +28,7 @@ import service.message.QuotationRequestMessage;
 public class Main {
   public static int SEED_ID = 0;
   public static HashMap<Long, ClientInfo> cache = new HashMap<Long, ClientInfo>();
+  public static HashMap<Long, List<Quotation>> clientMap = new HashMap<Long, List<Quotation>>();
 
   /**
    * This is the starting point for the application. Here, we must
@@ -56,19 +54,26 @@ public class Main {
       connection.setClientID("client");
       Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-      Queue queue = session.createQueue("QUOTATIONS");
-      Topic topic = session.createTopic("APPLICATIONS");
-      MessageProducer producer = session.createProducer(topic);
-      MessageConsumer consumer = session.createConsumer(queue);
+      Queue queue = session.createQueue("REQUESTS");
+      Topic topic = session.createTopic("RESPONSES");
+      MessageProducer producer = session.createProducer(queue);
+      MessageConsumer consumer = session.createConsumer(topic);
 
       connection.start();
 
-      for (ClientInfo clientInfo: clients) {
-        QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clientInfo);
+      for (ClientInfo client: clients) {
+        QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, client);
         Message request = session.createObjectMessage(quotationRequest);
         cache.put(quotationRequest.id, quotationRequest.info);
         producer.send(request);
       }
+
+      // ClientApplicationMessage should contain 1 quote
+      // sent here, check id and add to list of quotes
+      // after a while print them out
+      DisplayQuotationsThread dqt = new DisplayQuotationsThread();
+      Thread dThread = new Thread(dqt);
+      dThread.start();
 
       while(true) {
         Message message = consumer.receive();
@@ -76,13 +81,21 @@ public class Main {
           Object content = ((ObjectMessage) message).getObject();
           if (content instanceof ClientApplicationMessage) {
             ClientApplicationMessage response = (ClientApplicationMessage)content;
-            ClientInfo info = cache.get(response.clientId);
+            /*
+            ClientInfo info = response.clientInfo;
             displayProfile(info);
-            //cache.remove(response.clientId);
-            for (Quotation quote: response.quotations) {
+            for (Quotation quote: response.quotes) {
               displayQuotation(quote);
             }
             System.out.println("\n");
+            */
+            if (clientMap.containsKey(response.clientId)) {
+              ((List<Quotation>)clientMap.get(response.clientId)).add(response.quote);
+            } else {
+              List<Quotation> quoteList = new ArrayList<Quotation>();
+              quoteList.add(response.quote);
+              clientMap.put(response.clientId, quoteList);
+            }
           }
           message.acknowledge();
         } else {
@@ -91,6 +104,27 @@ public class Main {
       }
     } catch (JMSException e) {
       System.out.println("Trouble: " + e);
+    }
+  }
+
+  public static class DisplayQuotationsThread implements Runnable {
+    public void run() {
+      try {
+        Thread.sleep(5000);
+        // TODO: Create clientMap
+        for (Long client: clientMap.keySet()) {
+          System.out.println("Client Id ===============");
+          System.out.println(client);
+          displayProfile(cache.get(client));
+          // TODO: Implement clientQuotes
+          for (Quotation quote: clientMap.get(client)) {
+            displayQuotation(quote);
+          }
+          System.out.println("\n");
+        }
+      } catch (InterruptedException e) {
+        System.out.println("Trouble: " + e);
+      }
     }
   }
 
