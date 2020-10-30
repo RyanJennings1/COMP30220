@@ -55,7 +55,7 @@ public class ClientInfo implements Serializable {
     this.points = pnts;
   }
 
-  public int noClaims() {
+  public int getNoClaims() {
     return this.noClaims;
   }
 
