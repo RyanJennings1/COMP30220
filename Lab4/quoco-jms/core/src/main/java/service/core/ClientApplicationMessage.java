@@ -7,11 +7,11 @@ import java.util.List;
 public class ClientApplicationMessage implements Serializable {
   public long clientId;
   public ClientInfo clientInfo;
-  public List<Quotation> quotations = new ArrayList<Quotation>();
+  public Quotation quote;
 
-  public ClientApplicationMessage(long clientId, ClientInfo clientInfo, Quotation quotation) {
+  public ClientApplicationMessage(long clientId, ClientInfo clientInfo, Quotation quote) {
     this.clientId = clientId;
     this.clientInfo = clientInfo;
-    this.quotations.add(quotation);
+    this.quote = quote;
   }
 }

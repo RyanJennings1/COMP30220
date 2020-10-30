@@ -1,0 +1,3 @@
+When running the docker sometimes it won't print the client output
+But I spent days on this so could you try running it locally
+too just to see as it definitely works there in a scalable way
