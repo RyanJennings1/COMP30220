@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  broker:
+    build: broker
+    ports:
+      - 8083
+  auldfellas:
+    build: auldfellas
+    ports:
+      - 8080
+    depends_on:
+      - broker
+  girlpower:
+    build: girlpower 
+    ports:
+      - 8081
+    depends_on:
+      - broker
+  dodgydrivers:
+    build: dodgydrivers
+    ports:
+      - 8082
+    depends_on:
+      - broker
