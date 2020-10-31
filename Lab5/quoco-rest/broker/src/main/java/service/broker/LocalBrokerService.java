@@ -39,6 +39,7 @@ public class LocalBrokerService {
     RestTemplate restTemplate = new RestTemplate();
     HttpEntity<ClientInfo> request = new HttpEntity<>(info);
 
+    // Loop through service endpoints to collect quotations
     for (String service: services) {
       Quotation quote = restTemplate.postForObject(service, request, Quotation.class);
       quotations.add(quote);
