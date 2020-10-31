@@ -1,8 +1,4 @@
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-ARG DEPENDENCY=target/dependency
+FROM openjdk:8-jre-alpine
 EXPOSE 8082
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD java -cp app:app/lib/* service.dodgydrivers.Application
+COPY target/dodgydrivers-0.0.1.jar /dodgydrivers-0.0.1.jar
+CMD usr/bin/java -jar /dodgydrivers-0.0.1.jar

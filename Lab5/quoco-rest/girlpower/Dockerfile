@@ -1,8 +1,4 @@
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-ARG DEPENDENCY=target/dependency
+FROM openjdk:8-jre-alpine
 EXPOSE 8081
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD java -cp app:app/lib/* service.girlpower.Application
+COPY target/girlpower-0.0.1.jar /girlpower-0.0.1.jar
+CMD usr/bin/java -jar /girlpower-0.0.1.jar

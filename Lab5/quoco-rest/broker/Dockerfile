@@ -1,8 +1,4 @@
 FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-ARG DEPENDENCY=target/dependency
 EXPOSE 8083
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD java -cp app:app/lib/* service.broker.Application
+COPY target/broker-0.0.1.jar /broker-0.0.1.jar
+CMD usr/bin/java -jar /broker-0.0.1.jar
