@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 
-import service.core.ClientApplicationMessage;
+import service.core.ClientApplication;
 import service.core.ClientInfo;
 import service.core.Quotation;
 
@@ -19,19 +19,17 @@ public class Client {
    * @param args
    */
   public static void main(String[] args) {
-    /*
-    String host = "localhost";
-    if (args.length > 0) {
-      host = args[0];
-    }
-    */
     RestTemplate restTemplate = new RestTemplate();
-    HttpEntity<ClientInfo> request = new HttpEntity<>(clients[0]);
-    Quotation quotation = restTemplate.postForObject("http://localhost:8080/quotations",
-                                                     request,
-                                                     Quotation.class);
-    displayProfile(clients[0]);
-    displayQuotation(quotation);
+    for (ClientInfo client: clients) {
+      HttpEntity<ClientInfo> request = new HttpEntity<>(client);
+      ClientApplication application = restTemplate.postForObject("http://localhost:8083/applications",
+                                                       request,
+                                                       ClientApplication.class);
+      displayProfile(client);
+      for (Quotation quote: application.getQuotations()) {
+        displayQuotation(quote);
+      }
+    }
   }
 
   /**
