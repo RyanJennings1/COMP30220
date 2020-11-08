@@ -19,11 +19,11 @@ public class QuotationRequest {
     this.id = id;
   }
 
-  public ClientInfo getInfo() {
+  public ClientInfo getClientInfo() {
     return this.clientInfo;
   }
 
-  public void setInfo(ClientInfo info) {
+  public void setClientInfo(ClientInfo info) {
     this.clientInfo = info;
   }
 }
