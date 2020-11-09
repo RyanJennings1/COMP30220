@@ -16,9 +16,9 @@
     <module>auldfellas</module>
     <module>girlpower</module>
     <module>dodgydrivers</module>
+    <module>broker</module>
     <!--
     <module>client</module>
-    <module>broker</module>
     -->
   </modules>
 </project>

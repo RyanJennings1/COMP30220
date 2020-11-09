@@ -2,7 +2,7 @@ package service.messages;
 
 import service.core.Quotation;
 
-public class QuotationResponse {
+public class QuotationResponse implements MySerializable {
   private int id;
   private Quotation quotation;
 
