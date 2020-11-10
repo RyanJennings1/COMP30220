@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  broker:
+    build: broker
+    networks:
+      - default
+    ports:
+      - "2551:2551"
+    expose:
+      - 2551
+  auldfellas:
+    build: auldfellas
+    networks:
+      - default
+    ports:
+      - "2552:2552"
+    expose:
+      - 2552
+    links:
+      - broker
+    depends_on:
+      - broker
+  girlpower:
+    build: girlpower 
+    networks:
+      - default
+    ports:
+      - "2554:2554"
+    expose:
+      - 2554
+    links:
+      - broker
+    depends_on:
+      - broker
+  dodgydrivers:
+    build: dodgydrivers
+    networks:
+      - default
+    ports:
+      - "2553:2553"
+    expose:
+      - 2553
+    links:
+      - broker
+    depends_on:
+      - broker
