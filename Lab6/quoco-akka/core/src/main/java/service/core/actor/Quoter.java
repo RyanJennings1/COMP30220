@@ -9,6 +9,13 @@ import service.messages.Init;
 import service.messages.QuotationRequest;
 import service.messages.QuotationResponse;
 
+/**
+ *
+ * Quoter class used by each QuotationService
+ * Sets the QuotationService on initialisation
+ * Gets quotations from the service on QuotationRequest
+ *
+ */
 public class Quoter extends AbstractActor {
   private QuotationService service;
 

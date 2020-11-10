@@ -8,6 +8,18 @@ import service.core.ClientInfo;
 import service.core.Quotation;
 import service.messages.ApplicationResponse;
 
+/**
+ *
+ * ClientActor that extends AbstractActor
+ * Handle Application responses and output gathered
+ * Quotations from the response
+ *
+ * displayProfile and displayQuotation are separated
+ * from the client.Main.java file
+ *
+ * @author Ryan
+ *
+ */
 public class ClientActor extends AbstractActor {
   @Override
   public Receive createReceive() {

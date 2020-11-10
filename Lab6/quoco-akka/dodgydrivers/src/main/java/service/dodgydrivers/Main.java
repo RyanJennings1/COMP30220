@@ -8,6 +8,13 @@ import akka.actor.Props;
 import service.actor.Quoter;
 import service.messages.Init;
 
+/**
+ *
+ * Dodgydrivers Main class to create Actor for DDQService
+ * Registers with the broker
+ *
+ * @author Ryan
+ */
 public class Main {
   public static void main(String[] args) {
     ActorSystem system = ActorSystem.create();

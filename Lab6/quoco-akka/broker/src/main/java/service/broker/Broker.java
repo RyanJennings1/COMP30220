@@ -30,6 +30,7 @@ public class Broker extends AbstractActor {
       .match(String.class,
         msg -> {
           if (!msg.equals("register")) return;
+          // Leaving in printlns to verify registration of service
           System.out.println("=================================");
           System.out.println("Registration received");
           actorRefs.add(getSender());
@@ -38,9 +39,13 @@ public class Broker extends AbstractActor {
       .match(QuotationResponse.class,
         msg -> {
           System.out.println("=================================");
-          System.out.println("Response Id: --->");
+          // Leaving in printlns to veryify response from service
+          System.out.println("Received Response Id: --->");
           System.out.println(msg.getId());
 
+          // If the quotations map store alrady has quotations then
+          // update them.
+          // Else create new entry with list of quotations
           if (quotations.containsKey(msg.getId())) {
             List<Quotation> responseQuotations = quotations.get(msg.getId());
             responseQuotations.add(msg.getQuotation());
@@ -55,6 +60,7 @@ public class Broker extends AbstractActor {
         })
       .match(ApplicationRequest.class,
         msg -> {
+          // Store client ref for RequestDeadline response later
           client = getSender();
           clients.put(SEED_ID, msg.getClientInfo());
           for (ActorRef ref: actorRefs) {
@@ -71,7 +77,6 @@ public class Broker extends AbstractActor {
         })
       .match(RequestDeadline.class,
         msg -> {
-          //getSender().tell(new ApplicationResponse(clients.get(msg.getIdentifier()),
           client.tell(new ApplicationResponse(clients.get(msg.getIdentifier()),
                                               quotations.get(msg.getIdentifier())), null);
         }).build();

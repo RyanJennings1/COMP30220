@@ -14,11 +14,11 @@ public class Main {
 
   /**
    * This is the starting point for the application. Here, we must
-   * get a reference to the Broker Service and then invoke the
-   * getQuotations() method on that service.
+   * get an ActorSelection to the Broker and then invoke the
+   * send an ApplicationRequest to the Broker
    * 
-   * Finally, you should print out all quotations returned
-   * by the service.
+   * The ClientActor refs will handle the ApplicationResponse and
+   * output the ClientInfo and Quotations
    * 
    * @param args
    */
